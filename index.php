@@ -111,6 +111,7 @@
 			$tvStr = '';
 			$phoneStr = '';
 			$panStr = '';
+			//TODO refactor
 			foreach($items as $item) {
 				switch(get_class($item)) {
 					case 'Tv' : {
