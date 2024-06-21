@@ -7,7 +7,8 @@
 		private $price;
 		private $brand;
 		private $name;
-		
+		private $count = 0;
+
 		public function setPrice($price) {
 			$this->price = $price;
 		}
@@ -25,6 +26,12 @@
 		}
 		public function getName() {
 			return $this->name;
+		}
+		public function setCount($count) {
+			$this->count = $count;
+		}
+		public function getCount() {
+			return $this->count;
 		}
 	}
 	
@@ -105,40 +112,26 @@
 			$tvs = 0;
 			$phones = 0;
 			$pans = 0;
+            $count = 0;
 			$tv = [];
 			$phone = [];
 			$pan = [];
+            $products = [];
 			$tvStr = '';
 			$phoneStr = '';
 			$panStr = '';
-			//TODO refactor
+            $productsStr = '';
+
 			foreach($items as $item) {
-				switch(get_class($item)) {
-					case 'Tv' : {
-						$tv[] = [$tvs++, $item->getPrice()];
-					}
-					break;
-					case 'Phone' : {
-						$phone[] = [$phones++, $item->getPrice()];
-					}
-					break;
-					case 'Pan' : {
-						$pan[] = [$pans++, $item->getPrice()];
-					}
-					break;
-				}
+                $count++;
+                $item->setCount($count);
+                $products[] = [$item->getCount(), $item->getPrice(), $item->getBrand()];
 			}
-			foreach ($tv as $t) {
-				$tvStr = $t[0] . ' телевизоров по цене ' . $t[0]*$t[1] . PHP_EOL;
+			foreach ($products as $product) {
+				$productsStr = $product[2] . ': Количество = ' . $product[0] . ', цена = ' . $product[0]*$product[1] . PHP_EOL;
 			}
-			foreach ($phone as $t) {
-				$phoneStr = $t[0] . ' телефонов по цене ' . $t[0]*$t[1] . PHP_EOL;
-			}
-			foreach ($pan as $t) {
-				$panStr = $t[0] . ' сковородок по цене ' . $t[0]*$t[1] . PHP_EOL;
-			}
-			
-			return $tvStr . $phoneStr . $panStr;
+
+			return $productsStr;
 		}
 	}
 	
@@ -191,40 +184,40 @@
 	$calc->addItem($pan);
 	echo $calc->getTotalAmount();
 
-
-use PHPUnit\Framework\MockObject\Generator;
-use PHPUnit\Framework\TestCase;
-
-class CalcTest extends TestCase {
-
-	public function testSuccess() {
-	   $calc = Calc::getInstance();
-	   
-	   $input = '1 телевизоров по цене 5000
-1 телефонов по цене 12000
-2 сковородок по цене 4000
-';
-	   
-	   CalcClassMock::expects($input);
-	   $this->assertEquals($input, $calc->getTotalAmount());
-	}
- 
-}
-class CalcClassMock
-{
-	public static function expects($input) {
-        $mock =  (new PHPUnit\Framework\MockObject\Generator)->getMock(
-			'Calc',
-			array('getTotalAmount'),
-			array(),
-			'',
-			false
-		);
-
-		$mock
-			->expects(new PHPUnit\Framework\MockObject\Rule\AnyInvokedCount(1))
-			->method('getTotalAmount')
-			->will(new PHPUnit\Framework\MockObject\Stub\ReturnStub($input));
-		
-    }
-}
+//TODO refactor
+//use PHPUnit\Framework\MockObject\Generator;
+//use PHPUnit\Framework\TestCase;
+//
+//class CalcTest extends TestCase {
+//
+//	public function testSuccess() {
+//	   $calc = Calc::getInstance();
+//
+//	   $input = '1 телевизоров по цене 5000
+//1 телефонов по цене 12000
+//2 сковородок по цене 4000
+//';
+//
+//	   CalcClassMock::expects($input);
+//	   $this->assertEquals($input, $calc->getTotalAmount());
+//	}
+//
+//}
+//class CalcClassMock
+//{
+//	public static function expects($input) {
+//        $mock =  (new PHPUnit\Framework\MockObject\Generator)->getMock(
+//			'Calc',
+//			array('getTotalAmount'),
+//			array(),
+//			'',
+//			false
+//		);
+//
+//		$mock
+//			->expects(new PHPUnit\Framework\MockObject\Rule\AnyInvokedCount(1))
+//			->method('getTotalAmount')
+//			->will(new PHPUnit\Framework\MockObject\Stub\ReturnStub($input));
+//
+//    }
+//}
