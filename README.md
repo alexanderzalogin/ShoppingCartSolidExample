@@ -24,3 +24,9 @@ PHP
 Пример расчета:
 10 телевизоров по цене 50000, 2 телефона по цене 10000, 3 сковородки по цене 2000
 
+# Tests
+
+## Install phpunit using command line
+`composer require phpunit/phpunit`
+## Run tests
+`./vendor/bin/phpunit tests`
